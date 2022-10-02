@@ -1,0 +1,46 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+IMAGE = "generic/centos7"
+NODES = 1
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define "master" do |sub|
+    # You may experience some troubles with network. Change the "brigde" and "dev" to your
+    # host's main network interface, for example, "eth0"
+    sub.vm.network "public_network", ip: "192.168.31.221", "bridge": "enp2s0", "dev": "enp2s0"
+    sub.vm.box = IMAGE
+    sub.vm.hostname = "master"
+    sub.vm.provider :libvirt do |libvirt|
+      libvirt.nested = true
+      libvirt.cpus = 1
+      libvirt.memory = 1024
+    end
+    config.vm.provision "shell", inline: <<-SHELL
+      sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config    
+      systemctl restart sshd.service
+    SHELL
+  end
+
+  (1..NODES).each do |i|
+    config.vm.define "node#{i}" do |sub|
+    # The same story here
+    sub.vm.network "public_network", ip: "192.168.31.22#{i+1}", "bridge": "enp2s0", "dev": "enp2s0"
+    sub.vm.box = IMAGE
+    sub.vm.hostname = "node#{i}"
+    sub.vm.provider :libvirt do |libvirt|
+      libvirt.nested = true
+      libvirt.cpus = 1
+      libvirt.memory = 1024
+    end
+    config.vm.provision "shell", inline: <<-SHELL
+      sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config    
+      systemctl restart sshd.service
+    SHELL
+  end 
+end
+
+end 
