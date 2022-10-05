@@ -11,7 +11,7 @@ I installed it on my Debian server. Feel free to install it on whatever Linux ma
 ```bash
 $ sudo apt-get install vagrant
 ```
-As simple as it gets.
+As simple as it can get.
 
 I have a fully working Vagrantfile that manages virtualbox and [Vagrant can use it right away](#usage), but for now I will concentrate on installing libvirt, as it is a bit tricky to install and use for the first time.
 
@@ -27,24 +27,28 @@ And now add your user to the libvirt group:
 $ sudo adduser $(id -un) libvirt
 ```
 
-We are almost finished. Now clone this repo:
+We are almost finished. Now clone this repo and modify the IP:
 
 ```bash
 $ git clone https://github.com/Starmaster99/headintheclouds.git
-$ cd headintheclouds/homelab-setup/libvirt
+$ cd headintheclouds/homelab-setup/
+$ vim libvirt
 ```
 
 Look for these two:
-`sub.vm.network "public_network", ip: "192.168.31.221", "bridge": "enp2s0", "dev": "enp2s0"`
+
+`sub.vm.network "public_network", ip: "192.168.31.221", "bridge": "enp2s0", "dev": "enp2s0"`\
 `sub.vm.network "public_network", ip: "192.168.31.22#{i+1}", "bridge": "enp2s0", "dev": "enp2s0"`
+
 Change the `192.168.31.1` to your router's IP. You might want to use `192.168.1.1` or `192.168.0.1` or something else entirely.
 
 And now you are pretty much done!
 
 ## Usage
 
-Vagrant docs can be found [here](https://www.vagrantup.com/docs). All Vagrant command-line interface (CLI) commands are [here](https://www.vagrantup.com/docs/cli). You can browse Vagrant boxes (the images of distros that Vagrant can use, or *the package format for Vagrant environments*) [here](https://app.vagrantup.com/boxes/search), though I use CentOS 7 box. 
-If you want another box, just change the `IMAGE` variable in the header of the file.
+Vagrant docs can be found [here](https://www.vagrantup.com/docs). All Vagrant command-line interface (CLI) commands are [here](https://www.vagrantup.com/docs/cli). You can browse Vagrant boxes (the images of distros that Vagrant can use, or *the package format for Vagrant environments*) [here](https://app.vagrantup.com/boxes/search), though I use CentOS 7 box.
+
+If you want another box, just change the `IMAGE` variable in the header of the file.\
 If you want more or less than two running machines, change the `NODES` variable.
 
 Start the Vagrant:
