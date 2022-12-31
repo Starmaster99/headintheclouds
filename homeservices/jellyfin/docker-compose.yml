@@ -1,0 +1,18 @@
+---
+version: "3.0"
+
+services:
+  jellyfin:
+    image: linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Kiev
+    volumes:
+      - $HOME/homeservices/jellyfin/config:/config
+      - $HOME/homeservices/jellyfin/cache:/cache
+      - $HOME/homeservices/jellyfin/jellyfin-media:/media
+    ports:
+      - 8096:8096
+    restart: unless-stopped

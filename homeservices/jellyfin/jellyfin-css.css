@@ -1,0 +1,25 @@
+@import url('https://cdn.jsdelivr.net/gh/CTalvio/Ultrachromic/effects/glassy.css');
+@import url('https://cdn.jsdelivr.net/gh/CTalvio/Ultrachromic/login/login_minimalistic.css');
+
+
+/* FONT */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@200;300&display=swap');body, h1, h2, h3, h4 {
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+.emby-textarea {
+  font-family: monospace;
+  font-size: 10pt;
+}
+
+
+/* SLIGHT CHANGES */
+.playedIndicator {background: #00000058;}
+#similarCollapsible { display: none; }
+.backgroundContainer {background-color: #000000; filter: brightness(50%);} 
+
+
+/* TRANSPARENT TOP */
+.skinHeader.focuscontainer-x.skinHeader-withBackground.skinHeader-blurred {background:none; background-color:rgba(0, 0, 0, 0);}
+.skinHeader.focuscontainer-x.skinHeader-withBackground.skinHeader-blurred.noHomeButtonHeader {background:none; background-color:rgba(0, 0, 0, 0);}
+
