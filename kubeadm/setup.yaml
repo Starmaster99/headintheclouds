@@ -116,17 +116,28 @@
       # make sure you allow traffic on port 8285 
 
 
-- name: nodes join
-  hosts: node
+- name: worker join
+  hosts: worker
   gather_facts: no
   become: yes
   tasks:
  
-  - name: join
+  - name: worker nodes join
     shell: |
-      sudo kubeadm join {{ hostvars['master-node']['ansible_default_ipv4']['address'] }}:6443 \
-       --token {{ hostvars['master-node']['token'] }} \
-       --discovery-token-ca-cert-hash {{ hostvars['master-node']['hash'] }}
+      sudo kubeadm join {{ hostvars['master-1']['ansible_default_ipv4']['address'] }}:6443 \
+       --token {{ hostvars['master-1']['token'] }} \
+       --discovery-token-ca-cert-hash {{ hostvars['master-1']['hash'] }}
+
+
+- name: final preparations
+  hosts: master
+  gather_facts: no
+  become: yes
+  tasks:
+
+  - name: change workers role
+    shell: kubectl label node worker-1 node-role.kubernetes.io/worker=worker
+    # TODO: change any amount of worker roles    
 
   - debug:
-      msg: success! please wait a minute as worker nodes boot up.
+      msg: success! check out your new cluster by typing `vagrant ssh master-1` and `sudo kubectl get nodes`

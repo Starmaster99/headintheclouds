@@ -1,0 +1,6 @@
+- name: check if nodes are ready
+  hosts: all
+  
+  tasks:
+    - name: ping nodes
+      ping:

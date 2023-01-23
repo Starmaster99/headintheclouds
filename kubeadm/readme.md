@@ -55,3 +55,10 @@ $ sudo kubectl get nodes
 ```
 
 And now you are good to go!
+
+## Links
+
+* [Kubeadm official docs](https://kubernetes.io/)
+* [What are init systems?](https://news.ycombinator.com/item?id=7203623)
+* [Container runtimes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
+* [Kubernetes networking](https://kubernetes.io/docs/concepts/cluster-administration/networking/#how-to-implement-the-kubernetes-networking-model)
