@@ -4,3 +4,6 @@
   tasks:
     - name: ping nodes
       ping:
+
+    - debug:
+        msg: success! start cluster setup - `ansible-playbook -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory setup.yaml`

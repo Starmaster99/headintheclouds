@@ -16,6 +16,8 @@ You need to install:
 
 Use the package manager of your distro.
 
+Installation example for Arch Linux:
+
 ```bash
 $ sudo pacman -Sy vagrant ansible
 ```
@@ -37,7 +39,7 @@ $ cd headintheclouds/kubeadm
 $ vagrant up
 ```
 
-> **TIP:** Check my other projects! `$ cd ..` 
+> **TIP:** You can just follow the instructions you see in debug task messages.
 
 Wait a little bit and provision the rest by ansible playbook:
 
@@ -50,7 +52,7 @@ You shoud get the `success!` message later.
 Check how your newly built cluster is doing:
 
 ```bash
-$ vagrant ssh master-node
+$ vagrant ssh master-1
 $ sudo kubectl get nodes
 ```
 

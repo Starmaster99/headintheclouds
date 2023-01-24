@@ -140,4 +140,4 @@
     # TODO: change any amount of worker roles    
 
   - debug:
-      msg: success! check out your new cluster by typing `vagrant ssh master-1` and `sudo kubectl get nodes`
+      msg: success! check out your new cluster: `vagrant ssh master-1` and `sudo kubectl get nodes`
