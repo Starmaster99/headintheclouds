@@ -9,10 +9,18 @@
   become: yes
 
   tasks:
-    - name: swapoff; forwarding IPv4 traffic and letting iptables see bridged traffic
-      shell: |
-        sudo swapoff -a
 
+    - name: disable swap for current session
+      shell: sudo swapoff -a
+
+    - name: disable swap permanently
+      replace:
+        path: /etc/fstab
+        regexp: '^(\s*)([^#\n]+\s+)(\w+\s+)swap(\s+.*)$'
+        replace: '#\1\2\3swap\4'
+
+    - name: forwarding IPv4 traffic and letting iptables see bridged traffic
+      shell: |
         cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
         overlay
         br_netfilter
@@ -88,7 +96,9 @@
 
   tasks:
     - name: cluster init
-      shell: sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+      shell: |
+        sudo kubeadm init --pod-network-cidr=10.244.0.0/16 \
+        --apiserver-advertise-address=172.16.0.2
       # this specific subnet is required to use with flannel
 
     - name: cluster activate
@@ -116,7 +126,7 @@
       # make sure you allow traffic on port 8285 
 
 
-- name: worker join
+- name: workers join
   hosts: worker
   gather_facts: no
   become: yes
@@ -124,9 +134,9 @@
  
   - name: worker nodes join
     shell: |
-      sudo kubeadm join {{ hostvars['master-1']['ansible_default_ipv4']['address'] }}:6443 \
-       --token {{ hostvars['master-1']['token'] }} \
-       --discovery-token-ca-cert-hash {{ hostvars['master-1']['hash'] }}
+      sudo kubeadm join {{ hostvars['master-1']['ansible_eth1']['ipv4']['address'] }}:6443 \
+      --token {{ hostvars['master-1']['token'] }} \
+      --discovery-token-ca-cert-hash {{ hostvars['master-1']['hash'] }}
 
 
 - name: final preparations
@@ -140,4 +150,4 @@
     # TODO: change any amount of worker roles    
 
   - debug:
-      msg: success! check out your new cluster: `vagrant ssh master-1` and `sudo kubectl get nodes`
+      msg: success! check out your new cluster - `vagrant ssh master-1` and `sudo kubectl get nodes`
