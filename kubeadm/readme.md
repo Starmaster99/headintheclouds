@@ -71,10 +71,12 @@ $ vagrant ssh master-1
 $ sudo kubectl create -f nginx.yaml
 ```
 
-And you are good to go. Check your application: [172.16.0.2:30001](172.16.0.3:30001)
+And you are good to go. Check your application: [172.16.0.2:30001](172.16.0.2:30001)
 
 > **NOTE:** It doesn't matter what node you choose to go to since Kubernetes has a built-in load balancer.
 > We will touch the load balancer topic later.
+
+If you just followed me here, you should see my static website. It will explain some general information about me.
 
 ## Links
 

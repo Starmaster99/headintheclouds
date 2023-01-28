@@ -3,7 +3,7 @@ apiVersion: v1              # the most up-to-date stable version
 kind: Service               # defines an object
 metadata:                   # the data about the data
   name: nginx-service       # defines a name in `deployment` list accesible by `kubectl get deployment`
-  labels:                   # labels are tags. you can view a group using `kubectl get pods --selector app=nginx`                   
+  labels:                   # labels are tags. you can view a group using `kubectl get all --selector app=nginx`                   
     app: nginx              # the label name
 spec:                       # the place where stuff happens
   type: NodePort            # service type
@@ -38,7 +38,7 @@ spec:
     spec:                   # describes the insides of pod
       containers:           # pods use containers
       - name: nginx         # container name
-        image: nginx:1.14.2 # container image (available @ hub.docker.com)
+        image: taxheaven/hewwo:wowwd # my docker image <(￣︶￣)>
         ports:              # ports to be exposed
         - containerPort: 80 # port number
         resources:          # container limits
