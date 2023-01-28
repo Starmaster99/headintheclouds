@@ -1,0 +1,50 @@
+---                         # yaml files are separated by these three lines
+apiVersion: v1              # the most up-to-date stable version
+kind: Service               # defines an object
+metadata:                   # the data about the data
+  name: nginx-service       # defines a name in `deployment` list accesible by `kubectl get deployment`
+  labels:                   # labels are tags. you can view a group using `kubectl get pods --selector app=nginx`                   
+    app: nginx              # the label name
+spec:                       # the place where stuff happens
+  type: NodePort            # service type
+  ports:                    # what ports with what rules to open
+    - port: 8080            # expose container's port
+      targetPort: 80        # serve on standart http port
+      nodePort: 30001       # since i don't run k8s in the cloud, i use that port to view my webpage
+      protocol: TCP         # standart http protocol
+      name: http            # port group name. you can view it in `kubectl describe svc nginx-service`
+  selector:                 # the labels must match to create a pod with these specs
+    app: nginx              # label of pod to be created
+---                         
+apiVersion: apps/v1          
+kind: Deployment            
+metadata:                   
+  name: nginx-deployment    
+spec:                       
+  selector:                 # list of labels pod needs to get before deployment
+    matchLabels:            # must match these labels
+      app: nginx            # the label to be assigned
+  replicas: 2               # tells deployment to run 2 pods matching the template. called "ReplicaSet"
+  minReadySeconds: 5        # minimal time to wait before pod becomes available 
+  strategy:                 # the strategy that is used to update pods
+    type: RollingUpdate     # deactivates the pod, updates is and activates again ensuring minimum downtime
+    rollingUpdate:          # specs
+      maxUnavailable: 1     # max number of pods that are unavailable during the updating process
+      maxSurge: 1           # max number of pods that are inserted above the `replicas` number during the update 
+  template:                 # the template that is used for creating pods
+    metadata:               # the data abot the template
+      labels:               
+        app: nginx           
+    spec:                   # describes the insides of pod
+      containers:           # pods use containers
+      - name: nginx         # container name
+        image: nginx:1.14.2 # container image (available @ hub.docker.com)
+        ports:              # ports to be exposed
+        - containerPort: 80 # port number
+        resources:          # container limits
+          limits:           # container will be killed if needs more
+            cpu: 500m       # cpu limit, measured in "milicores", an interesting topic
+            memory: 500Mi   # memory limit, measured in "mebibytes"
+          requests:         # will be throttled if requires more
+            cpu: 200m       # the same stuff here
+            memory: 200Mi   # the same stuff here
