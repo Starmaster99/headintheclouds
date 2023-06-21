@@ -5,21 +5,23 @@ ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
 # centos image is required while working with libvirt
 IMAGE = "generic/centos7"
-CTL_CPU   = 4		# minimal is 2
+CTL_CPU   = 2		# minimal is 2
 CTL_MEM   = 4096	# minimal is 2048
 WRK_NODES = 1	
-WRK_CPU   = 4
+WRK_CPU   = 2
 WRK_MEM   = 4096
 
 Vagrant.configure("2") do |config|
 
   config.vm.define "master-1" do |sub|
     # make sure you specified correctly your bridge and dev. type `ip a` to check
-    sub.vm.network "private_network", ip: "172.16.0.2", "bridge": "enp2s0", "dev": "enp2s0"
+    sub.vm.network "private_network", ip: "172.16.0.2"
     sub.vm.box = IMAGE
     # reserved for future control plane high availability
     sub.vm.hostname = "master-1"
     sub.vm.provider :libvirt do |libvirt|
+      # for fedora users
+      libvirt.qemu_use_session = false
       libvirt.nested = true
       libvirt.cpus = CTL_CPU 
       libvirt.memory = CTL_MEM
@@ -29,10 +31,12 @@ Vagrant.configure("2") do |config|
   (1..WRK_NODES).each do |i|
     config.vm.define "worker-#{i}" do |sub|
     # same story here
-    sub.vm.network "private_network", ip: "172.16.0.#{i+2}", "bridge": "enp2s0", "dev": "enp2s0"
+    sub.vm.network "private_network", ip: "172.16.0.#{i+2}"
     sub.vm.box = IMAGE
     sub.vm.hostname = "worker-#{i}"
     sub.vm.provider :libvirt do |libvirt|
+      # that one too
+      libvirt.qemu_use_session = false
       libvirt.nested = true
       libvirt.cpus = WRK_CPU
       libvirt.memory = WRK_MEM
@@ -43,7 +47,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.groups = {
       "master" => ["master-1"],
-      "worker" => ["worker-1", "worker-2"]
+      "worker" => ["worker-1"]
     }
     ansible.playbook = "ping.yaml"
   end

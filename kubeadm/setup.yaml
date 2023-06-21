@@ -43,10 +43,10 @@
         state: stopped
         enabled: no
       
-    - name: update the system 
-      yum:
-        name: '*'
-        state: latest
+#    - name: update the system 
+#      yum:
+#        name: '*'
+#        state: latest
 
     - name: prepare to install packages
       shell: |
@@ -138,8 +138,7 @@
       --token {{ hostvars['master-1']['token'] }} \
       --discovery-token-ca-cert-hash {{ hostvars['master-1']['hash'] }}
 
-
-- name: final preparations
+- name: misc preparations
   hosts: master
   gather_facts: no
   become: yes
@@ -149,5 +148,21 @@
     shell: kubectl label node worker-1 node-role.kubernetes.io/worker=worker
     # TODO: change any amount of worker roles    
 
+
+- name: Deploy an nginx website
+  hosts: master
+  gather_facts: no
+  become: yes
+  tasks:
+
+  - name: Copy manifest to `master-1`
+    copy:
+      src: objects/nginx.yaml
+      dest: $HOME/
+
+  - name: Deploy
+    shell:
+      cmd: sudo kubectl create -f $HOME/nginx.yaml
+      
   - debug:
-      msg: success! check out your new cluster - `vagrant ssh master-1` and `sudo kubectl get nodes`
+      msg: Success! Check out your new cluster - `172.16.0.2:30001`

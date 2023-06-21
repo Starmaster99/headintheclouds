@@ -26,7 +26,7 @@ $ sudo pacman -Sy vagrant ansible
 Install vagrant-libvirt and vagrant-scp:
 
 ```bash
-$ vagrant plugin install vagrant-libvirt vagrant-scp
+$ vagrant plugin install vagrant-libvirt
 ```
 
 ## Setup
@@ -50,28 +50,12 @@ $ ansible-playbook -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_in
 
 You shoud get the `success!` message later.
 
-Check how your newly built cluster is doing:
-
-```bash
-$ vagrant ssh master-1
-$ sudo kubectl get nodes
-```
-
-And now you are good to go!
 
 ## Deploy
 
-Now you are able to deploy your first application. Exit out of your master (`$ exit`) vm and do the next steps.
+Congratulations! Your first application has just been deployed. 
 
-It is also advised to look through the `nginx.yaml` since you want to learn something, I left some helpful commentary.
-
-```bash
-$ vagrant scp objects/nginx.yaml
-$ vagrant ssh master-1
-$ sudo kubectl create -f nginx.yaml
-```
-
-And you are good to go. Check your application: [172.16.0.2:30001](172.16.0.2:30001)
+Simply navigate to [172.16.0.2:30001](http://172.16.0.2:30001) and marvel at its beauty.
 
 > **NOTE:** It doesn't matter what node you choose to go to since Kubernetes has a built-in load balancer.
 > We will touch the load balancer topic later.
