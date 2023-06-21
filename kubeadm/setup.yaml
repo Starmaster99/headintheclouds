@@ -43,10 +43,10 @@
         state: stopped
         enabled: no
       
-#    - name: update the system 
-#      yum:
-#        name: '*'
-#        state: latest
+    - name: update the system 
+      yum:
+        name: '*'
+        state: latest
 
     - name: prepare to install packages
       shell: |
